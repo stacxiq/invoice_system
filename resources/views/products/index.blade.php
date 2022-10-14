@@ -9,78 +9,63 @@
     <link href="{{URL::asset('assets/plugins/select2/css/select2.min.css')}}" rel="stylesheet">
 @endsection
 @section('page-header')
+				<!-- breadcrumb -->
 				<div class="breadcrumb-header justify-content-between">
 					<div class="my-auto">
 						<div class="d-flex">
-							<h4 class="content-title mb-0 my-auto">الفواتير</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ قائمة الفواتير </span>
+							<h4 class="content-title mb-0 my-auto">قائمة المنتجات</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ المنتجات</span>
 						</div>
 					</div>
+
 				</div>
+				<!-- breadcrumb -->
 @endsection
 @section('content')
 				<!-- row -->
+                @include('layouts.crud_alert')
                 <div class="row row-sm">
 
                     <!--div-->
                     <div class="col-xl-12">
                         <div class="card mg-b-20">
-                            <div class="card-header pb-0">
-                                <a href=" {{ route('invoice.create') }} " class="btn btn-dark">
-                                    <i class="typcn typcn-document-add">
+                            <div class="card-header pb-0 w-25">
+                                <a class="modal-effect btn btn-dark btn-block" data-effect="effect-scale" data-toggle="modal" href="#modaldemo8">اضافة منتج </a>
 
-                                    </i>
-                                    اضافة فاتورة
-                                </a>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table id="example" class="table key-buttons text-md-nowrap">
+                                    <table id="example3" class="table key-buttons text-md-nowrap">
                                         <thead>
                                         <tr>
                                             <th class="border-bottom-0">#</th>
-                                            <th class="border-bottom-0">رقم الفاتورة</th>
-                                            <th class="border-bottom-0">تاريخ الفاتورة</th>
-                                            <th class="border-bottom-0">تاريخ الاستحقاق</th>
-                                            <th class="border-bottom-0">القسم</th>
-                                            <th class="border-bottom-0">المنتج</th>
-                                            <th class="border-bottom-0">الخصم</th>
-                                            <th class="border-bottom-0">نسبة الضريبة</th>
-                                            <th class="border-bottom-0">قيمة الضريبة</th>
-                                            <th class="border-bottom-0">الاجمالي</th>
-                                            <th class="border-bottom-0">الحالة</th>
-                                            <th class="border-bottom-0">الملاحظات</th>
+                                            <th class="border-bottom-0">
+                                            اسم المنتج
+                                            </th>
+                                            <th class="border-bottom-0"> اسم القسم </th>
+                                            <th class="border-bottom-0">
+                                            الملاحضات
+                                            </th>
+                                            <th class="border-bottom-0">العمليات</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-
-                                        @foreach($invoices as $invoice)
+                                        @foreach($products as $product)
                                             <tr>
+                                                <td>{{ $product->id }}</td>
+                                                <td>{{ $product->product_name }}</td>
+                                                <td>{{ $product->section->section_name }}</td>
+                                                <td>{{ $product->description }}</td>
                                                 <td>
-                                                        {{ $invoice->id }}
+                                                    <button class="btn btn-outline-success btn-sm"
+                                                            data-name="{{ $product->product_name }}" data-pro_id="{{ $product->id }}"
+                                                            data-section_id="{{ $product->section_id }}"
+                                                            data-description="{{ $product->description }}" data-toggle="modal"
+                                                            data-target="#edit_Product">تعديل</button>
+
+                                                    <button class="btn btn-outline-danger btn-sm " data-pro_id="{{ $product->id }}"
+                                                            data-product_name="{{ $product->product_name }}" data-toggle="modal"
+                                                            data-target="#modaldemo9">حذف</button>
                                                 </td>
-                                                <td>
-                                                    <a href="{{ route('invoice.show',$invoice->id) }}">
-                                                    {{ $invoice->invoice_number }}
-                                                    </a>
-                                                </td>
-                                                <td>{{ $invoice->invoice_Date }}</td>
-                                                <td>{{ $invoice->Due_date }}</td>
-                                                <td>{{ $invoice->section->section_name }}</td>
-                                                <td>{{ $invoice->product->product_name }}</td>
-                                                <td>{{ $invoice->Discount }}</td>
-                                                <td>{{ $invoice->Rate_VAT }}</td>
-                                                <td>{{ $invoice->Value_VAT }}</td>
-                                                <td>{{ $invoice->Total }}</td>
-                                                <td>
-                                                    @if ($invoice->Value_Status == 1)
-                                                        <span class="text-success">{{ $invoice->Status }}</span>
-                                                    @elseif($invoice->Value_Status == 2)
-                                                        <span class="text-danger">{{ $invoice->Status }}</span>
-                                                    @else
-                                                        <span class="text-warning">{{ $invoice->Status }}</span>
-                                                    @endif
-                                                </td>
-                                                <td>{{ $invoice->note }}</td>
                                             </tr>
                                         @endforeach
 
@@ -102,13 +87,16 @@
 
 
                 </div>
+                @include('products.insert_modal')
+                @include('products.edit_modal')
+                @include('products.delete_modal')
 				<!-- row closed -->
 			</div>
 			<!-- Container closed -->
 		</div>
+
 		<!-- main-content closed -->
 @endsection
-
 @section('js')
     <!-- Internal Data tables -->
     <script src="{{URL::asset('assets/plugins/datatable/js/jquery.dataTables.min.js')}}"></script>
@@ -128,5 +116,33 @@
     <script src="{{URL::asset('assets/plugins/datatable/js/dataTables.responsive.min.js')}}"></script>
     <script src="{{URL::asset('assets/plugins/datatable/js/responsive.bootstrap4.min.js')}}"></script>
     <!--Internal  Datatable js -->
+    <script src="{{URL::asset('assets/plugins/select2/js/select2.min.js')}}"></script>
+    <script src="{{URL::asset('assets/js/form-elements.js')}}"></script>
     <script src="{{URL::asset('assets/js/table-data.js')}}"></script>
+
+    <script>
+        $('#edit_Product').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget)
+            var Product_name = button.data('name')
+            var section_id = button.data('section_id')
+            var pro_id = button.data('pro_id')
+            var description = button.data('description')
+            var modal = $(this)
+            modal.find('.modal-body #Product_name').val(Product_name);
+            modal.find('.modal-body #section_id').val(section_id);
+            modal.find('.modal-body #description').val(description);
+            modal.find('.modal-body #pro_id').val(pro_id);
+        });
+
+        $('#modaldemo9').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget)
+            console.log(button)
+            var pro_id = button.data('pro_id')
+            var product_name = button.data('product_name')
+            var modal = $(this)
+            modal.find('.modal-body #product_name').val(product_name)
+            modal.find('.modal-body #id').val(pro_id)
+        });
+    </script>
 @endsection
+

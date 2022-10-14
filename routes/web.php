@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\InvoicesAttachmentController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SectionsController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,7 +31,18 @@ Route::middleware(['auth'])->group(function (){
         Route::put('/', [SectionsController::class,'update'])->name('update');
         Route::delete('/', [SectionsController::class,'destroy'])->name('destroy');
         Route::post('/', [SectionsController::class,'store'])->name('store');
+        Route::get('/{id}', [SectionsController::class,'getProducts'])->name('get-products');
     });
+    Route::prefix('products')->name('products.')->group(function (){
+        Route::get('/', [ProductController::class,'index'])->name('index');
+        Route::put('/', [ProductController::class,'update'])->name('update');
+        Route::delete('/',[ProductController::class,'destroy'])->name('destroy');
+        Route::post('/', [ProductController::class,'store'])->name('store');
+    });
+    Route::post('delete_file', [InvoicesAttachmentController::class,'destroy'])->name('delete_file');
+
+    Route::get('image/{invoice_number}/{file_name}', [InvoicesAttachmentController::class,'show_image'])->name('show_image');
+    Route::get('image_download/{invoice_number}/{file_name}', [InvoicesAttachmentController::class,'download_image'])->name('image_download');
 });
 
 Auth::routes();

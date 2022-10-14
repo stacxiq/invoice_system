@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\Sections;
 use Illuminate\Http\Request;
 
@@ -35,6 +36,11 @@ class SectionsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+    public  function  getProducts($id){
+        $products = Product::where('section_id',$id)->pluck('product_name','id');
+        return json_encode($products);
+    }
     public function store(Request $request)
     {
         //
@@ -129,3 +135,4 @@ class SectionsController extends Controller
         return redirect()->route('sections.index');
     }
 }
+
